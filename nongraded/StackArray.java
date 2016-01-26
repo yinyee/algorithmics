@@ -23,36 +23,20 @@ public class StackArray {
 	}
 	
 	// push() method adds a new element to the top of the stack
-	public void push(Object object) throws StackArrayException {
-		
-		if (count >= 50) {
-			throw new StackArrayException("No more free space in stack");
-		} else if (count < 0) {
-			throw new StackArrayException("Negative index: something's wrong");
-		} else {
-			array[count] = object;
-		}
-		
+	public void push(Object object) {
+		array[count++] = object;
 	}
 	
 	// peek() method returns the object at the top of the stack but does not remove it
-	public Object peek() throws StackArrayException {
-		if (count != 0) {
-			Object top = array[count-1];
-			return top;
-		} else {
-			throw new StackArrayException("Stack is empty");
-		}
+	public Object peek() {
+		Object top = array[count-1];
+		return top;
 	}
 	
 	// pop() method removes and returns the object at the top of the stack
-	public Object pop() throws StackArrayException {
-		if (count != 0) {
-			Object top = array[count--];
-			return top;
-		} else {
-			throw new StackArrayException("Stack is empty");
-		}
+	public Object pop() {
+		Object top = array[--count];
+		return top;
 	}
 	
 	// isEmpty() method checks if stack is empty
@@ -65,19 +49,9 @@ public class StackArray {
 		count = 0;
 	}
 	
-	// Define new StackArrayException which extends the ArrayOutOfBoundsException
-	public class StackArrayException extends Exception {
-		
-		// Default constructor
-		public StackArrayException() {
-			super();
-		}
-		
-		// Constructor with message
-		public StackArrayException(String s) {
-			super(s);
-		}
-		
+	// size() method returns the number of elements in the array
+	public int size() {
+		return count;
 	}
 	
 }
