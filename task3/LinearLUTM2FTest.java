@@ -29,10 +29,17 @@ public class LinearLUTM2FTest {
 
 		    myLUT.remove("Andrew");
 		    System.out.println(myLUT);
+		    
+		    LinearLUT lut = new LinearLUT();
+			lut.insert("Samuel", new Integer(29));
+			lut.insert("Travis", new Integer(34));
+			System.out.println(lut);
 		
 		} catch (Exception e) {
 		    System.out.println(e);
 		}
     }
+	
+	
 
 }
