@@ -10,10 +10,12 @@ public class SequenceDLList {
 	
 	Node listHead;
 	Node listTail;
+	private int size;
 	
 	public SequenceDLList () {
 		listHead = null;
 		listTail = null;
+		size = 0;
 	}
 	
 	/**
@@ -58,9 +60,7 @@ public class SequenceDLList {
 				pointer.next.previous = newNode; // update next node
 				pointer.next = newNode; // update previous node
 			}
-			
-			
-			
+			size +=1;
 		}
 		
 	}
@@ -77,6 +77,7 @@ public class SequenceDLList {
 			listHead.previous = new Node(object, null, listHead);
 			listHead = listHead.previous;
 		}
+		size +=1;
 	}
 	
 	/**
@@ -91,6 +92,7 @@ public class SequenceDLList {
 			listTail.next = new Node(object, listTail, null);
 			listTail = listTail.next;
 		}
+		size =+1;
 	}
 	
 	/**
@@ -127,6 +129,7 @@ public class SequenceDLList {
 				pointer.next.previous = pointer; // update next node
 			}
 		}
+		size -=1;
 	}
 	
 	/**
@@ -145,7 +148,7 @@ public class SequenceDLList {
 		} else {
 			listHead = listHead.next;
 		}
-		
+		size -=1;
 	}
 	
 	/**
@@ -163,7 +166,7 @@ public class SequenceDLList {
 		} else {
 			listTail = listTail.previous;
 		}
-		
+		size -=1;
 	}
 	
 	/**
@@ -238,6 +241,13 @@ public class SequenceDLList {
 	 */
 	public void clear() {
 		listHead = listTail = null;
+	}
+	
+	/**
+	 * @return the number of elements in the sequence
+	 */
+	public int size() {
+		return size;
 	}
 	
 	/**

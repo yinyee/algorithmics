@@ -32,12 +32,14 @@ public class SequenceDLListUnitTest {
 		assertEquals(num3, result);
 		result = (Integer) sequence.last();
 		assertEquals(num3, result);
+		assertEquals(1, sequence.size());
 		
 		sequence.insertFirst(num1);
 		result = (Integer) sequence.first();
 		assertEquals(num1, result);
 		result = (Integer) sequence.last();
 		assertEquals(num3, result);
+		assertEquals(2, sequence.size());
 		
 	}
 	
@@ -49,12 +51,14 @@ public class SequenceDLListUnitTest {
 		assertEquals(num3, result);
 		result = (Integer) sequence.last();
 		assertEquals(num3, result);
+		assertEquals(1, sequence.size());
 		
 		sequence.insertLast(num1);
 		result = (Integer) sequence.first();
 		assertEquals(num3, result);
 		result = (Integer) sequence.last();
 		assertEquals(num1, result);
+		assertEquals(2, sequence.size());
 		
 	}
 	
@@ -71,6 +75,7 @@ public class SequenceDLListUnitTest {
 		assertEquals(num2, result);
 		result = (Integer) sequence.last();
 		assertEquals(num3, result);
+		assertEquals(3, sequence.size());
 		
 	}
 	
@@ -84,6 +89,7 @@ public class SequenceDLListUnitTest {
 		assertEquals(num1, result);
 		result = (Integer) sequence.last();
 		assertEquals(num3, result);
+		assertEquals(2, sequence.size());
 		
 		sequence.deleteFirst();
 		
@@ -91,6 +97,7 @@ public class SequenceDLListUnitTest {
 		assertEquals(num3, result);
 		result = (Integer) sequence.last();
 		assertEquals(num3, result);
+		assertEquals(1, sequence.size());
 		
 	}
 	
@@ -104,6 +111,7 @@ public class SequenceDLListUnitTest {
 		assertEquals(num1, result);
 		result = (Integer) sequence.last();
 		assertEquals(num3, result);
+		assertEquals(2, sequence.size());
 		
 		sequence.deleteLast();
 		
@@ -111,6 +119,7 @@ public class SequenceDLListUnitTest {
 		assertEquals(num1, result);
 		result = (Integer) sequence.last();
 		assertEquals(num1, result);
+		assertEquals(1, sequence.size());
 				
 	}
 	
@@ -127,14 +136,20 @@ public class SequenceDLListUnitTest {
 		assertEquals(num1, result);
 		result = (Integer) sequence.element(1);
 		assertEquals(num2, result);
+		assertEquals(3, sequence.size());
 		
 		sequence.delete(2);			// 3 2
 		result = (Integer) sequence.last();
 		assertEquals(num2, result);
+		assertEquals(2, sequence.size());
 		
 		sequence.delete(0);			// 2
 		result = (Integer) sequence.last();
 		assertEquals(num2, result);
+		assertEquals(1, sequence.size());
+		
+		sequence.delete(0);
+		assertEquals(0, sequence.size());
 		
 	}
 
