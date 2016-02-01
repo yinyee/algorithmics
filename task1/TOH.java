@@ -6,14 +6,11 @@ package task1;
  * authored by Kathiresan.
  */
 
-import java.io.*;
-import java.lang.*;
 import java.util.*;
 
-@SuppressWarnings("unchecked")
 class TOH {
     static int movecount = 0;
-    static public void Solve2DiscsTOH ( Stack source, Stack temp, Stack dest ) {
+    static public void Solve2DiscsTOH ( Stack<Integer> source, Stack<Integer> temp, Stack<Integer> dest ) {
         temp.push ( source.pop() );
         movecount++;
         PrintStacks();
@@ -24,7 +21,7 @@ class TOH {
         movecount++;
         PrintStacks();
     }
-    static public int SolveTOH ( int nDiscs, Stack source, Stack temp, Stack dest ) {
+    static public int SolveTOH ( int nDiscs, Stack<Integer> source, Stack<Integer> temp, Stack<Integer> dest ) {
         if ( nDiscs <= 4 ) {
             if ( ( nDiscs % 2 ) == 0 ) {
                 Solve2DiscsTOH ( source, temp, dest );
@@ -65,16 +62,15 @@ class TOH {
         }
         return 1;
     }
-    static public Stack A = new Stack();
-    static public Stack B = new Stack();
-    static public Stack C = new Stack();
+    static public Stack<Integer> A = new Stack<Integer>();
+    static public Stack<Integer> B = new Stack<Integer>();
+    static public Stack<Integer> C = new Stack<Integer>();
     static public void PrintStacks() {
         if ( countA != A.size() ||
                 countB != B.size() ||
                 countC != C.size() ) {
             int diffA = A.size() - countA;
             int diffB = B.size() - countB;
-            int diffC = C.size() - countC;
             if ( diffA == 1 ) {
                 if ( diffB == -1 ) {
                     System.out.print ( "Move Disc " + A.peek() + " From B To A" );
@@ -109,7 +105,7 @@ class TOH {
     static int countA = 0;
     static int countB = 0;
     static int countC = 0;
-    static public void PrintStack ( Stack s ) {
+    static public void PrintStack ( Stack<Integer> s ) {
         System.out.print ( s.toString() );
     }
     public static void main ( String[] args ) {

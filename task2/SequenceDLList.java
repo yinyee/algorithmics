@@ -1,350 +1,279 @@
 package task2;
 
-class SequenceDLListException extends Exception {
-  SequenceDLListException() {
-    super();
-  }
-  SequenceDLListException(String s) {
-    super(s);
-  }
-}
-
 /**
- * <dl>
- * <dt>Purpose: Implementation of Sequence ADT.
- * <dd>
- *
- * <dt>Description:
- * <dd>This class is an implementation of the Sequence using an linked list as
- * the underlying data structure. The capacity is therefore unlimited and
- * overflow does not need to be checked.
- * </dl>
- *
- * @author Danny Alexander
- * @version $Date: 2000/01/08
+ * Based on SequenceList and SequenceDLList classes by Danny Alexander.
+ * References the public interface provided in slide #34, Linear Data 
+ * Structures by Prof. Jens Krinke.
  */
 
 public class SequenceDLList {
-  /**
-   * Member class Node encapsulates the nodes of the linked list in
-   * which the stack is stored. Each node contains a data item and a
-   * reference to another node - the next in the linked list.
-   */
-  protected class Node {
+	
+	Node listHead;
+	Node listTail;
+	
+	public SequenceDLList () {
+		listHead = null;
+		listTail = null;
+	}
+	
+	/**
+	 * Inserts a new item into the sequence at the specified position.
+	 * Note the zero-based index.
+	 * @param object
+	 * @param position
+	 * @throws SequenceDLListException 
+	 */
+	public void insert(Object object, int position) throws SequenceDLListException {
+		
+		// check for negative position
+		if (position < 0) {
+			throw new SequenceDLListException("Sequence position cannot be negative");
+		}
+		
+		// if sequence is empty and desired position is not 0
+		if (this.empty() && position != 0) {
+			throw new SequenceDLListException("Sequence is empty");
+		}
+		
+		if (position == 0) {
+			this.insertFirst(object);
+		} else {
+			int i = 1;
+			Node pointer = listHead;
+			while (i < position) {
+				if (pointer.next == null) {
+					throw new SequenceDLListException("Index out of bounds");
+				} else {
+					pointer = pointer.next;
+					i++;
+				}
+			}
+			// pointer is referencing the node just before the desired position
+			Node newNode = new Node(object, pointer, pointer.next); // insert new node
+			// update listTail if inserting at the end
+			if (pointer.next == null) {
+				listTail = newNode;
+				pointer.next = newNode;
+			} else {
+				pointer.next.previous = newNode; // update next node
+				pointer.next = newNode; // update previous node
+			}
+			
+			
+			
+		}
+		
+	}
+	
+	/**
+	 * Inserts a new item into the first position of the sequence.
+	 * @param object
+	 */
+	public void insertFirst(Object object) {
+		if (this.empty()) {
+			listHead = new Node(object, null, null);
+			listTail = listHead;
+		} else { 
+			listHead.previous = new Node(object, null, listHead);
+			listHead = listHead.previous;
+		}
+	}
+	
+	/**
+	 * Inserts a new item into the last position of the sequence.
+	 * @param object
+	 */
+	public void insertLast(Object object) {
+		if (this.empty()) {
+			listTail = new Node(object, null, null);
+			listHead = listTail;
+		} else {
+			listTail.next = new Node(object, listTail, null);
+			listTail = listTail.next;
+		}
+	}
+	
+	/**
+	 * Deletes the item at the specified position.
+	 * @param position
+	 */
+	public void delete(int position) throws SequenceDLListException {
+		
+		// check if sequence is empty
+		if (this.empty()) {
+			throw new SequenceDLListException("Sequence is empty");
+		}
+		
+		// check if only one item in the sequence
+		if (listHead == listTail) {
+			listHead = listTail = null;
+		} else {
+			int i = 1;
+			Node pointer = listHead;
+			while (i < position) {
+				if (pointer.next == null) {
+					throw new SequenceDLListException("Index out of bounds");
+				} else {
+					pointer = pointer.next;
+					i++;
+				}
+			}
+			// pointer is referencing the node just before the desired position
+			// special case: deleting last element
+			if (pointer.next.next == null) {
+				deleteLast();
+			} else {
+				pointer.next = pointer.next.next; // update current node
+				pointer.next.previous = pointer; // update next node
+			}
+		}
+	}
+	
+	/**
+	 * Deletes the item at the first position of the sequence.
+	 */
+	public void deleteFirst() throws SequenceDLListException {
+		
+		// check if sequence is empty
+		if (this.empty()) {
+			throw new SequenceDLListException("Sequence is empty");
+		}
+		
+		// check if only one item in the sequence
+		if (listHead == listTail) {
+			listHead = listTail = null;
+		} else {
+			listHead = listHead.next;
+		}
+		
+	}
+	
+	/**
+	 * Deletes the item at the last position of the sequence.
+	 */
+	public void deleteLast() throws SequenceDLListException {
+		
+		// check if sequence is empty
+		if (this.empty()) {
+			throw new SequenceDLListException("Sequence is empty");
+		}
+		// check if only one item in the sequence
+		if (listHead == listTail) {
+			listHead = listTail = null;
+		} else {
+			listTail = listTail.previous;
+		}
+		
+	}
+	
+	/**
+	 * Uses a zero-based index.
+	 * @param position
+	 * @return the item at the specified position
+	 */
+	public Object element(int position) throws SequenceDLListException {
+		
+		// check if sequence is empty
+		if (this.empty()) {
+			throw new SequenceDLListException("Sequence is empty");
+		} else {
+			int i = 0;
+			Node pointer = listHead;
+			while (i < position) {
+				if (pointer.next == null) {
+					throw new SequenceDLListException("Element not found");
+				} else {
+					pointer = pointer.next;
+					i++;
+				}
+			}
+			// pointer is referencing the node just before the desired position
+			return pointer.datum;
+		}
+		
+	}
+	
+	/**
+	 * @return the first item in the sequence
+	 */
+	public Object first() throws SequenceDLListException {
+		
+		// check if sequence is empty
+		if (this.empty()) {
+			throw new SequenceDLListException("Sequence is empty");
+		} else {
+			return listHead.datum;
+		}
+		
+	}
+	
+	/**
+	 * @return the last item in the sequence
+	 */
+	public Object last() throws SequenceDLListException {
+		
+		// check if sequence is empty
+		if (this.empty()) {
+			throw new SequenceDLListException("Sequence is empty");
+		} else {
+			return listTail.datum;
+		}
+		
+	}
+	
+	/**
+	 * Checks if the sequence is empty.
+	 * @return true is sequence is empty
+	 */
+	public boolean empty() {
+		if (listHead == null && listTail == null) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	/**
+	 * Clears the sequence of all its items.
+	 */
+	public void clear() {
+		listHead = listTail = null;
+	}
+	
+	/**
+	 * Node is a helper class.
+	 */
+	protected class Node {
+		
+		protected Object datum;
+		protected Node previous;
+		protected Node next;
+		
+		protected Node(Object datum) {
+			this(datum, null, null);
+		}
+		
+		protected Node(Object datum, Node previous, Node next) {
+			this.datum = datum;
+			this.previous = previous;
+			this.next = next;
+		}
+	}
 
-    public Node(Object o) {
-      this(o, null);
-    }
+}
 
-    public Node(Object o, Node n) {
-      datum = o;
-      next = n;
-    }
-
-    //The Node data structure consists of two object references.
-    //One for the datum contained in the node and the other for
-    //the next node in the list.
-
-    protected Object datum;
-    protected Node next;
-  }
-
-  //We use object references to the head and tail of the list (the head
-  //and tail of the sequence, respectively).
-  private Node listHead;
-  private Node listTail;
-
-  //Only require a single constructor, which sets both object
-  //references to null.
-  /**
-   * Constructs an empty sequence object.
-   */
-  public SequenceDLList() {
-    listHead = null;
-    listTail = null;
-  }
-
-  /**
-   * Adds a new item at the start of the sequence.
-   */
-  public void insertFirst(Object o) {
-    //There is a special case when the sequence is empty.
-    //Then the both the head and tail pointers needs to be
-    //initialised to reference the new node.
-    if (listHead == null) {
-      listHead = new Node(o, listHead);
-      listTail = listHead;
-    }
-
-    //In the general case, we simply add a new node at the start
-    //of the list via the head pointer.
-    else {
-      listHead = new Node(o, listHead);
-    }
-  }
-
-  /**
-   * Adds a new item at the end of the sequence.
-   */
-  public void insertLast(Object o) {
-    //There is a special case when the sequence is empty.
-    //Then the both the head and tail pointers needs to be
-    //initialised to reference the new node.
-    if (listHead == null) {
-      listHead = new Node(o, listHead);
-      listTail = listHead;
-    }
-
-    //In the general case, we simply add a new node to the end
-    //of the list via the tail pointer.
-    else {
-      listTail.next = new Node(o, listTail.next);
-      listTail = listTail.next;
-    }
-  }
-
-  /**
-   * Adds a new item at a specified position in the sequence.
-   */
-  public void insert(Object o, int index) throws SequenceDLListException {
-    //Check the index is positive.
-    if (index < 0) {
-      throw new SequenceDLListException("Indexed Element out of Range");
-    }
-
-    //There is a special case when the sequence is empty.
-    //Then the both the head and tail pointers needs to be
-    //initialised to reference the new node.
-    if (listHead == null) {
-      if (index == 0) {
-        listHead = new Node(o, listHead);
-        listTail = listHead;
-      } else {
-        throw new SequenceDLListException("Indexed element is out of range");
-      }
-    }
-
-    //There is another special case for insertion at the head of
-    //the sequence.
-    else if (index == 0) {
-      listHead = new Node(o, listHead);
-    }
-
-    //In the general case, we need to chain down the linked list
-    //from the head until we find the location for the new
-    //list node. If we reach the end of the list before finding
-    //the specified location, we know that the given index was out
-    //of range and throw an exception.
-    else {
-      Node nodePointer = listHead;
-      int i = 1;
-      while (i < index) {
-        nodePointer = nodePointer.next;
-        i += 1;
-        if (nodePointer == null) {
-          throw new SequenceDLListException("Indexed Element out of Range");
-        }
-      }
-
-      //Now we've found the node before the position of the
-      //new one, so we 'hook in' the new Node.
-
-      nodePointer.next = new Node(o, nodePointer.next);
-
-      //Finally we need to check that the tail pointer is
-      //correct. Another special case occurs if the new
-      //node was inserted at the end, in which case, we need
-      //to update the tail pointer.
-      if (nodePointer == listTail) {
-        listTail = listTail.next;
-      }
-    }
-  }
-
-  /**
-   * Removes the item at the start of the sequence.
-   */
-  public void deleteFirst() throws SequenceDLListException {
-    //Check there is something in the sequence to delete.
-    if (listHead == null) {
-      throw new SequenceDLListException("Sequence Underflow");
-    }
-
-    //There is a special case when there is just one item in the
-    //sequence. Both pointers then need to be reset to null.
-    if (listHead.next == null) {
-      listHead = null;
-      listTail = null;
-    }
-
-    //In the general case, we just unlink the first node of the
-    //list.
-    else {
-      listHead = listHead.next;
-    }
-  }
-
-  /**
-   * Removes the item at the end of the sequence.
-   */
-  public void deleteLast() throws SequenceDLListException {
-    //Check there is something in the sequence to delete.
-    if (listHead == null) {
-      throw new SequenceDLListException("Sequence Underflow");
-    }
-
-    //There is a special case when there is just one item in the
-    //sequence. Both pointers then need to be reset to null.
-    if (listHead.next == null) {
-      listHead = null;
-      listTail = null;
-    }
-
-    //In the general case, we need to chain all the way down the
-    //list in order to reset the link of the second to last
-    //element to null.
-    else {
-      Node nodePointer = listHead;
-      while (nodePointer.next != listTail) {
-        nodePointer = nodePointer.next;
-      }
-
-      //Unlink the last node and reset the tail pointer.
-      nodePointer.next = null;
-      listTail = nodePointer;
-    }
-  }
-
-  /**
-   * Removes the item at the specified position in the sequence.
-   */
-  public void delete(int index) throws SequenceDLListException {
-    //Check there is something in the sequence to delete.
-    if (listHead == null) {
-      throw new SequenceDLListException("Sequence Underflow");
-    }
-
-    //Check the index is positive.
-    if (index < 0) {
-      throw new SequenceDLListException("Indexed Element out of Range");
-    }
-
-    //There is a special case when there is just one item in the
-    //sequence. Both pointers then need to be reset to null.
-    if (listHead.next == null) {
-      if (index == 0) {
-        listHead = null;
-        listTail = null;
-      } else {
-        throw new SequenceDLListException("Indexed element is out of range.");
-      }
-    }
-
-    //There is also a special case when the first element has to
-    //be removed.
-
-    else if (index == 0) {
-      deleteFirst();
-    }
-
-    //In the general case, we need to chain down the list to find
-    //the node in the indexed position.
-    else {
-      Node nodePointer = listHead;
-      int i = 1;
-      while (i < index) {
-        nodePointer = nodePointer.next;
-        i += 1;
-        if (nodePointer.next == null) {
-          throw new SequenceDLListException("Indexed Element out of Range");
-        }
-
-      }
-
-      //Unlink the node and reset the tail pointer if that
-      //node was the last one.
-      if (nodePointer.next == listTail) {
-        listTail = nodePointer;
-      }
-      nodePointer.next = nodePointer.next.next;
-    }
-  }
-
-  /**
-   * Returns the item at the start of the sequence.
-   */
-  public Object first() throws SequenceDLListException {
-    if (listHead != null) {
-      return listHead.datum;
-    } else {
-      throw new SequenceDLListException("Indexed Element out of Range");
-    }
-  }
-
-  /**
-   * Returns the item at the end of the sequence.
-   */
-  public Object last() throws SequenceDLListException {
-    if (listTail != null) {
-      return listTail.datum;
-    } else {
-      throw new SequenceDLListException("Indexed Element out of Range");
-    }
-  }
-
-  /**
-   * Returns the item at the specified position in the sequence.
-   */
-  public Object element(int index) throws SequenceDLListException {
-    //Check the index is positive.
-    if (index < 0) {
-      throw new SequenceDLListException("Indexed Element out of Range");
-    }
-
-    //We need to chain down the list until we reach the indexed
-    //position
-
-    Node nodePointer = listHead;
-    int i = 0;
-    while (i < index) {
-      if (nodePointer.next == null) {
-        throw new SequenceDLListException("Indexed Element out of Range");
-      } else {
-        nodePointer = nodePointer.next;
-        i += 1;
-      }
-    }
-
-    return nodePointer.datum;
-  }
-
-  /**
-   * Tests whether there are any items in the sequence.
-   */
-  public boolean empty() {
-    return (listHead == null);
-  }
-
-  /**
-   * Returns the number of items in the sequence.
-   */
-  public int size() {
-    //Chain down the list counting the elements
-
-    Node nodePointer = listHead;
-    int size = 0;
-    while (nodePointer != null) {
-      size += 1;
-      nodePointer = nodePointer.next;
-    }
-    return size;
-  }
-
-  /**
-   * Empties the sequence.
-   */
-  public void clear() {
-    listHead = null;
-    listTail = null;
-  }
+/**
+ * SequenceDLListException is an exception class for SequenceDLList.
+ */
+@SuppressWarnings("serial")
+class SequenceDLListException extends Exception {
+	
+	SequenceDLListException() {
+		super();
+	}
+	
+	SequenceDLListException(String message) {
+		super(message);
+	}
+	
 }

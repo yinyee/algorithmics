@@ -31,7 +31,7 @@ public class SequenceDLListTest2 {
 	System.out.println(myList.last());
 	System.out.println(myList.element(0));
 	System.out.println(myList.element(1));
-	myList.deleteLast();
+	myList.deleteLast(); // failed here
 	System.out.println(myList.first());
 	System.out.println(myList.last());
 	System.out.println(myList.element(0));
@@ -41,10 +41,10 @@ public class SequenceDLListTest2 {
     }
 
     try {
-	myList.insert(new Integer(5), 0);
-	myList.insert(new Integer(6), 0);
-	myList.insert(new Integer(7), 1);
-	myList.insert(new Integer(6), 3);
+	myList.insert(new Integer(5), 0); // 5
+	myList.insert(new Integer(6), 0); // 6 5
+	myList.insert(new Integer(7), 1); // 6 7 5
+	myList.insert(new Integer(6), 3); // 6 7 5 6
 	System.out.println(myList.element(0));
 	System.out.println(myList.element(1));
 	System.out.println(myList.element(2));
