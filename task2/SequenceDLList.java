@@ -32,11 +32,6 @@ public class SequenceDLList {
 			throw new SequenceDLListException("Sequence position cannot be negative");
 		}
 		
-		// if sequence is empty and desired position is not 0
-		if (this.empty() && position != 0) {
-			throw new SequenceDLListException("Sequence is empty");
-		}
-		
 		if (position == 0) {
 			this.insertFirst(object);
 		} else {
@@ -92,7 +87,7 @@ public class SequenceDLList {
 			listTail.next = new Node(object, listTail, null);
 			listTail = listTail.next;
 		}
-		size =+1;
+		size +=1;
 	}
 	
 	/**
@@ -109,6 +104,9 @@ public class SequenceDLList {
 		// check if only one item in the sequence
 		if (listHead == listTail) {
 			listHead = listTail = null;
+			size -=1;
+		} else if (position == 0) {
+			this.deleteFirst();
 		} else {
 			int i = 1;
 			Node pointer = listHead;
@@ -123,13 +121,13 @@ public class SequenceDLList {
 			// pointer is referencing the node just before the desired position
 			// special case: deleting last element
 			if (pointer.next.next == null) {
-				deleteLast();
+				this.deleteLast();
 			} else {
 				pointer.next = pointer.next.next; // update current node
 				pointer.next.previous = pointer; // update next node
+				size -=1;
 			}
 		}
-		size -=1;
 	}
 	
 	/**
@@ -147,6 +145,7 @@ public class SequenceDLList {
 			listHead = listTail = null;
 		} else {
 			listHead = listHead.next;
+			listHead.previous = null;
 		}
 		size -=1;
 	}
@@ -165,6 +164,7 @@ public class SequenceDLList {
 			listHead = listTail = null;
 		} else {
 			listTail = listTail.previous;
+			listTail.next = null;
 		}
 		size -=1;
 	}
