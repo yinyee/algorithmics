@@ -1,6 +1,19 @@
+ORIGINAL
 ((Travis:34(Samuel:28))Priscilla:41((Kay:24(John:67))Helena:39(Andrew:14)))
 ((Travis:34(Samuel:28))Priscilla:41(Kay:24(John:67(Andrew:14))))
 ((Travis:34(Samuel:28))Priscilla:41(Kay:24(Andrew:14)))
 ((Samuel:28)Priscilla:41(Kay:24(Andrew:14)))
 (Priscilla:41(Kay:24(Andrew:14)))
 (Priscilla:41(Kay:24))
+
+MINE
+((Travis:34(Samuel:28))Priscilla:41((Kay:24(John:67))Helena:39(Andrew:14))) -- same
+((Travis:34(Samuel:28))Priscilla:41((Kay:24)John:67(Andrew:14)))
+((Travis:34(Samuel:28))Priscilla:41(Kay:24(Andrew:14))) -- same
+((Samuel:28)Priscilla:41(Kay:24(Andrew:14))) -- same
+(Priscilla:41(Kay:24(Andrew:14))) -- same
+(Priscilla:41(Kay:24)) -- same
+
+COMPARE
+((Travis:34(Samuel:28))Priscilla:41(Kay:24(John:67(Andrew:14)))) -- add right subtree to left subtree
+((Travis:34(Samuel:28))Priscilla:41((Kay:24)John:67(Andrew:14))) -- substitute for minimum node

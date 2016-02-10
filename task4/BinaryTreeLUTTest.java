@@ -4,7 +4,7 @@ public class BinaryTreeLUTTest {
   public static void main(String[] args) {
     try {
       BinaryTreeLUT myLUT = new BinaryTreeLUT();
-
+      
       myLUT.insert("Priscilla", new Integer(41));
       myLUT.insert("Travis", new Integer(34));
       myLUT.insert("Samuel", new Integer(28));

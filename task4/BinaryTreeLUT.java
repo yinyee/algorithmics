@@ -252,14 +252,35 @@ public class BinaryTreeLUT {
     } else if (node.right == null) {
       mergedTrees = node.left;
     } else {
-      // Otherwise, merge the left and right subtrees and link the
-      // merged structure to the current node.
-      addToTree(node.right, node.left);
-      mergedTrees = node.left;
+      // lrMerge is now referencing the node which we want to delete
+      // Step 1: Find the minimum node of the target node's left child
+      // (because this lookup table is in reverse order)
+      BSTreeNode successor = node.left;
+      while (successor.right != null) {
+		  successor = successor.right;
+	  }
+      // Step 2: Detach the successor node from its parent.
+      BSTreeNode parent = node;
+      if (parent.left == successor) {
+    	  parent.left = null;
+      } else {
+    	  parent = parent.left;
+    	  while (parent.right != null) {
+        	  if (parent.right == successor) {
+        		  parent.right = null;
+        	  } else {
+        		  parent = parent.right;
+        	  }
+          }
+      }
+      // Step 3: Replace target node by updating the successor node's children
+      successor.left = node.left;
+      successor.right = node.right;
+      mergedTrees = successor;
     }
     return mergedTrees;
   }
-
+  
   /**
    * Uses in order tree traversal to construct a string containing all
    * the key value pairs in the binary search tree.
