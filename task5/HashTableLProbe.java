@@ -13,7 +13,7 @@ class TableOverflowException extends Exception {
 public class HashTableLProbe {
 
   /**
-   * Entries in the hash table arry.
+   * Entries in the hash table array.
    */
   protected class Entry {
     protected String key;
