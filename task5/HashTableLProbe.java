@@ -1,5 +1,7 @@
 package task5;
 
+import java.util.Vector;
+
 @SuppressWarnings("serial")
 class KeyNotFoundInTableException extends Exception {
   /* Rudimentary exception - should be extended */
@@ -62,19 +64,20 @@ public class HashTableLProbe {
    */
   public void insert(String key, Object value)
   throws TableOverflowException {
+	  
     // Compute the hash value
     int index = h1(key, entries.length);
-
+    
     // Probe linearly to find empty slot.
     int count = 0;
-
+    
     while (entries[index] != null &&
            (!entries[index].key.equals("Tombstone"))
            && count != entries.length) {
       index = (index+1) % entries.length;
       count += 1;
     }
-
+    
     if (count == entries.length) {
       throw new TableOverflowException();
     } else {
@@ -140,6 +143,34 @@ public class HashTableLProbe {
     // Like delete, except that the entry is not replaced by a tombstone.
     // Instead, the entry will be deleted (set to null).
     // This requires a cleanup and rehashing all succeeding entries.
+	// Copied from delete()
+	int index = h1(key, entries.length);
+	int count = 0;
+	
+	while (entries[index] != null && (!entries[index].key.equals(key)) && count != entries.length) {
+	   index = (index+1) % entries.length;
+	   count += 1;
+	}
+
+	if (entries[index] == null || count == entries.length) {
+	   throw new KeyNotFoundInTableException();
+	} else {
+		entries[index] = null;
+		int i = (index+1) % entries.length;
+		String tempKey = "";
+		Object tempValue = null;
+		while (entries[i] != null) {
+			tempKey = entries[i].key.toString(); // passing by reference -- need to pass by value
+			tempValue = entries[i].value;
+			try {
+				insert(tempKey, tempValue);
+				entries[i] = null;
+			} catch (TableOverflowException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
   }
 
   /**
@@ -151,8 +182,27 @@ public class HashTableLProbe {
    */
   public void resize(int m)
   throws TableOverflowException {
-    // Replaces the entries array with a new one in wich all
+    // Replaces the entries array with a new one in which all
     // old entries are inserted fresh (`rehashing').
+	// Step 1: Temporarily copy entries into a vector
+	Vector<Entry> temp = new Vector<Entry>();
+	for (int i = 0; i < entries.length; i++) {
+		if (entries[i] != null && entries[i].key != "Tombstone") {
+			temp.addElement(entries[i]);
+		}
+	}
+	// Step 2: Make a new array for entries
+	if (m < temp.size()) {
+		throw new TableOverflowException();
+	} else {
+		// Step 3: Insert all entries into new array
+		entries = new Entry[m];
+		Entry current = null;
+		for (int i = 0; i < temp.size(); i++) {
+			current = temp.elementAt(i);
+			insert(current.key, current.value);
+		}
+	}
   }
 
   /**
