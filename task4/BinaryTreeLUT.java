@@ -259,15 +259,24 @@ public class BinaryTreeLUT {
       while (successor.right != null) {
 		  successor = successor.right;
 	  }
-      // Step 2: Detach the successor node from its parent.
+      // Step 2: Check if successor node has a left child.  Replace right
+      // child of parent with successor's left child; null otherwise.
       BSTreeNode parent = node;
       if (parent.left == successor) {
-    	  parent.left = null;
+    	  if (successor.left != null) {
+    		  parent.left = successor.left;
+    	  } else {
+    		  parent.left = null;  
+    	  }
       } else {
     	  parent = parent.left;
     	  while (parent.right != null) {
         	  if (parent.right == successor) {
-        		  parent.right = null;
+        		  if (successor.left != null) {
+        			  parent.right = successor.left;
+        		  } else {
+        			  parent.right = null; 
+        		  }
         	  } else {
         		  parent = parent.right;
         	  }
