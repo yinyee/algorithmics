@@ -144,14 +144,20 @@ public class HashTableLProbe {
     // Instead, the entry will be deleted (set to null).
     // This requires a cleanup and rehashing all succeeding entries.
 	// Copied from delete()
+	
+	// Get hash value of the desired key
 	int index = h1(key, entries.length);
+	
+	// Initialise count to zero
 	int count = 0;
 	
+	// Find the position of the desired entry
 	while (entries[index] != null && (!entries[index].key.equals(key)) && count != entries.length) {
 	   index = (index+1) % entries.length;
 	   count += 1;
 	}
-
+	
+	// index is now pointing at the desired entry
 	if (entries[index] == null || count == entries.length) {
 	   throw new KeyNotFoundInTableException();
 	} else {
@@ -165,6 +171,7 @@ public class HashTableLProbe {
 			try {
 				insert(tempKey, tempValue);
 				entries[i] = null;
+				i = (i+1) % entries.length;
 			} catch (TableOverflowException e) {
 				e.printStackTrace();
 			}
